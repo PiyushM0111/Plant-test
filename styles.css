@@ -1,0 +1,85 @@
+/* ========================================================
+   FloraDoc AI - Mobile Optimized Styles & Micro-Animations
+   ======================================================== */
+
+/* Mobile Safe Areas */
+.safe-top {
+  padding-top: max(env(safe-area-inset-top, 0px), 0px);
+}
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
+}
+
+/* Custom Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #060d0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #122d20;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* Active Nav State */
+.active-tab {
+  background: #059669 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+}
+
+/* Touch Friendly Mobile Tap Targets */
+button, select, input, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Grad-CAM Canvas Overlay */
+#gradcam-canvas {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Shutter Trigger Animation */
+#btn-shutter:active div {
+  transform: scale(0.85);
+  box-shadow: 0 0 25px rgba(52, 211, 153, 0.6);
+}
+
+/* Print Styles for Clinical Prescription */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+  header, footer, nav, .safe-bottom,
+  #view-scanner > div:first-child, .lg\:col-span-6:first-child,
+  #chat-messages, #chat-form, #btn-toggle-gradcam, #btn-speak-report,
+  #spectral-metrics-card, #timeline-slider {
+    display: none !important;
+  }
+  #view-scanner {
+    display: block !important;
+  }
+  .lg\:col-span-6:last-child {
+    width: 100% !important;
+  }
+  #panel-result {
+    display: block !important;
+  }
+  .bg-\[\#0e1d17\]\/90, .bg-\[\#0e1d17\]\/85, .bg-\[\#0e1d17\]\/80 {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #111827 !important;
+  }
+  .text-white, .text-slate-300, .text-slate-400 {
+    color: #1f2937 !important;
+  }
+  .text-emerald-400, .text-emerald-300 {
+    color: #047857 !important;
+  }
+}

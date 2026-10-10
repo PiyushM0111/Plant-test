@@ -1,0 +1,18 @@
+{
+  "name": "FloraDoc AI - Plant Doctor",
+  "short_name": "FloraDoc",
+  "description": "AI-Powered Plant Disease Classifier & Prescription Clinic",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070e0b",
+  "theme_color": "#064e3b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/628/628324.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

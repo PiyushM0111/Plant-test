@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#064e3b">
-  <link rel="manifest" href="manifest.json">
-  <title>FloraDoc AI - Advanced Plant Pathology & Mobile Clinic</title>
+  <title>Plant Doctor - Easy Plant Disease Scanner & Medicine Guide</title>
   
-  <!-- Typography -->
+  <!-- Fonts: Clean, large, highly readable typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,47 +19,19 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            display: ['Outfit', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans Devanagari"', 'sans-serif'],
+            display: ['"Outfit"', '"Noto Sans Devanagari"', 'sans-serif'],
           },
           colors: {
-            forest: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              200: '#a7f3d0',
-              300: '#6ee7b7',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              800: '#065f46',
-              900: '#064e3b',
-              950: '#022c22',
-            }
-          },
-          animation: {
-            'scan-laser': 'scanLaser 2s ease-in-out infinite alternate',
-            'radar-sweep': 'radarSweep 4s linear infinite',
-            'shutter-pulse': 'shutterPulse 0.3s ease-out',
-            'float': 'float 3.5s ease-in-out infinite',
-          },
-          keyframes: {
-            scanLaser: {
-              '0%': { top: '2%' },
-              '100%': { top: '96%' }
-            },
-            radarSweep: {
-              '0%': { transform: 'rotate(0deg)' },
-              '100%': { transform: 'rotate(360deg)' }
-            },
-            shutterPulse: {
-              '0%': { transform: 'scale(1)' },
-              '50%': { transform: 'scale(0.88)' },
-              '100%': { transform: 'scale(1)' }
-            },
-            float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-6px)' }
+            leaf: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
             }
           }
         }
@@ -73,780 +42,502 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-[#060c09] text-slate-100 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-white relative overflow-x-hidden pb-24 md:pb-8">
+<body class="bg-[#09120e] text-slate-100 min-h-screen font-sans antialiased selection:bg-emerald-500 selection:text-white pb-20">
 
-  <!-- Ambient Glow Backdrops -->
-  <div class="fixed top-[-10%] left-[-10%] w-[420px] h-[420px] rounded-full bg-emerald-600/15 blur-[120px] pointer-events-none -z-10"></div>
-  <div class="fixed bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[130px] pointer-events-none -z-10"></div>
-
-  <!-- Header / Navigation -->
-  <header class="sticky top-0 z-40 backdrop-blur-xl bg-[#08110e]/85 border-b border-emerald-900/40 safe-top">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+  <!-- ============================================== -->
+  <!-- TOP NAVIGATION & LANGUAGE SELECTOR             -->
+  <!-- ============================================== -->
+  <header class="sticky top-0 z-40 bg-[#0c1813]/90 backdrop-blur-md border-b border-emerald-900/40 px-4 py-3 sm:py-4">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
       
       <!-- Brand Logo -->
-      <div class="flex items-center gap-3 cursor-pointer" onclick="switchNav('scanner')">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/25 ring-1 ring-emerald-400/40">
-          <i data-lucide="leaf" class="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.5]"></i>
+      <div class="flex items-center gap-3 cursor-pointer" onclick="resetToHome()">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <i data-lucide="sprout" class="w-6 h-6 text-white stroke-[2.5]"></i>
         </div>
         <div>
-          <div class="flex items-center gap-1.5 sm:gap-2">
-            <span class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-white">Flora<span class="text-emerald-400">Doc</span></span>
-            <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">Mobile AI Pro</span>
-          </div>
-          <p class="text-[11px] text-emerald-300/70 hidden sm:block">Deep Learning Plant Pathology & Clinical Cure Engine</p>
+          <h1 class="font-display font-extrabold text-lg sm:text-xl text-white tracking-tight flex items-center gap-1.5">
+            Plant<span class="text-emerald-400">Doctor</span>
+            <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">Free</span>
+          </h1>
+          <p id="lbl-tagline" class="text-[11px] text-emerald-200/70 hidden sm:block">Easy Plant Health Check & Medicine Guide</p>
         </div>
       </div>
 
-      <!-- Desktop Navigation Tabs -->
-      <nav class="hidden md:flex items-center gap-1.5 bg-[#0e1d17]/90 p-1.5 rounded-2xl border border-emerald-800/40 text-sm">
-        <button id="nav-scanner-btn" onclick="switchNav('scanner')" class="nav-tab active-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-medium transition-all">
-          <i data-lucide="scan" class="w-4 h-4"></i> Scanner
+      <!-- Quick Language Selector (Large & obvious) -->
+      <div class="flex items-center gap-1.5 bg-[#12241d] p-1 rounded-2xl border border-emerald-800/60">
+        <button onclick="setAppLanguage('en')" id="lang-btn-en" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-emerald-600 text-white shadow">
+          English
         </button>
-        <button id="nav-calculator-btn" onclick="switchNav('calculator')" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-medium transition-all text-slate-300 hover:text-white">
-          <i data-lucide="calculator" class="w-4 h-4"></i> Dose Calculator
+        <button onclick="setAppLanguage('hi')" id="lang-btn-hi" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white">
+          हिंदी
         </button>
-        <button id="nav-library-btn" onclick="switchNav('library')" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-medium transition-all text-slate-300 hover:text-white">
-          <i data-lucide="book-open" class="w-4 h-4"></i> 30+ Diseases
-        </button>
-        <button id="nav-history-btn" onclick="switchNav('history')" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-medium transition-all text-slate-300 hover:text-white">
-          <i data-lucide="history" class="w-4 h-4"></i> Journal (<span id="history-badge">0</span>)
-        </button>
-      </nav>
-
-      <!-- Action Utilities -->
-      <div class="flex items-center gap-2">
-        <!-- Sound Toggle -->
-        <button id="btn-sound-toggle" onclick="toggleSound()" class="p-2 sm:p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-800/40 text-emerald-300 hover:text-white transition-all text-xs flex items-center" title="Toggle UI Audio">
-          <i id="sound-icon" data-lucide="volume-2" class="w-4 h-4"></i>
-        </button>
-
-        <!-- Language Selector -->
-        <select id="lang-selector" onchange="changeLanguage(this.value)" class="bg-[#0e1e17] border border-emerald-800/50 rounded-xl px-2 py-1.5 text-xs text-emerald-300 font-semibold focus:outline-none">
-          <option value="en">English (US)</option>
-          <option value="hi">हिंदी (Hindi)</option>
-          <option value="es">Español (ES)</option>
-        </select>
-
-        <!-- Settings Button -->
-        <button onclick="openSettingsModal()" class="p-2 sm:p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-800/40 text-emerald-300 hover:text-white transition-all text-xs" title="AI Settings">
-          <i data-lucide="settings-2" class="w-4 h-4"></i>
+        <button onclick="setAppLanguage('es')" id="lang-btn-es" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white">
+          Español
         </button>
       </div>
+
     </div>
   </header>
 
   <!-- ============================================== -->
-  <!-- MAIN CONTAINER                                 -->
+  <!-- MAIN WORKSPACE                                 -->
   <!-- ============================================== -->
-  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-5 space-y-6">
+
+    <!-- STEP 1: WELCOME & SIMPLE 3-STEP EXPLANATION BANNER -->
+    <div id="section-welcome" class="rounded-3xl bg-gradient-to-r from-emerald-950/70 via-[#0e2119] to-teal-950/60 border border-emerald-800/40 p-5 sm:p-6 text-center space-y-3">
+      <h2 id="lbl-main-title" class="text-2xl sm:text-3xl font-display font-extrabold text-white leading-tight">
+        What is wrong with your plant?
+      </h2>
+      <p id="lbl-main-sub" class="text-xs sm:text-sm text-emerald-200/80 max-w-lg mx-auto">
+        Take a clear photo of the sick leaf. We will tell you the problem and the easiest medicine to cure it.
+      </p>
+
+      <!-- 3 Visual Step Pills -->
+      <div class="grid grid-cols-3 gap-2 pt-2 max-w-md mx-auto text-[11px] font-semibold text-slate-200">
+        <div class="bg-black/30 border border-emerald-900/60 p-2 rounded-xl flex flex-col items-center gap-1">
+          <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs">1</span>
+          <span id="lbl-step1">Take Photo</span>
+        </div>
+        <div class="bg-black/30 border border-emerald-900/60 p-2 rounded-xl flex flex-col items-center gap-1">
+          <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs">2</span>
+          <span id="lbl-step2">See Problem</span>
+        </div>
+        <div class="bg-black/30 border border-emerald-900/60 p-2 rounded-xl flex flex-col items-center gap-1">
+          <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold text-xs">3</span>
+          <span id="lbl-step3">Follow Cure</span>
+        </div>
+      </div>
+    </div>
 
     <!-- ============================================== -->
-    <!-- VIEW 1: SCANNER & DIAGNOSTIC STUDIO            -->
+    <!-- INPUT HUB: 2 BIG SIMPLE BUTTONS                -->
     <!-- ============================================== -->
-    <section id="view-scanner" class="space-y-6">
+    <div id="section-input-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       
-      <!-- Top Mobile Hero Banner -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-950/80 via-[#0d1e17]/90 to-teal-950/70 border border-emerald-700/40 p-5 sm:p-7 backdrop-blur-xl">
-        <div class="max-w-3xl space-y-2">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Deep Spectral Vision & Pathology Analysis
+      <!-- Big Card 1: Camera -->
+      <button onclick="startCameraMode()" class="group text-left p-6 rounded-3xl bg-gradient-to-b from-[#10231b] to-[#0c1a14] border-2 border-emerald-600/50 hover:border-emerald-400 p-6 flex flex-col justify-between transition-all transform hover:-translate-y-1 shadow-lg shadow-black/40">
+        <div class="flex items-center justify-between w-full mb-4">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="camera" class="w-7 h-7"></i>
           </div>
-          <h1 class="text-2xl sm:text-4xl font-display font-extrabold tracking-tight text-white leading-snug">
-            Diagnose plant disease, <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">get scientific cures.</span>
-          </h1>
-          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            Real-time optical chlorophyll inspection, necrotic lesion segmentation, and tailored organic & medicinal prescriptions.
+          <span class="text-[11px] font-bold uppercase tracking-wider bg-emerald-500 text-white px-2.5 py-1 rounded-full shadow">Fast</span>
+        </div>
+        <div>
+          <h3 id="lbl-card-camera-title" class="text-lg font-display font-extrabold text-white mb-1">
+            Take a Photo with Camera
+          </h3>
+          <p id="lbl-card-camera-sub" class="text-xs text-slate-300">
+            Open camera, point at leaf, and click.
           </p>
         </div>
-      </div>
+      </button>
 
-      <!-- Main Responsive Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- LEFT COLUMN: Camera, Upload & Spectral Preprocessor -->
-        <div class="lg:col-span-6 space-y-5">
-          
-          <div class="bg-[#0e1d17]/85 rounded-3xl border border-emerald-800/40 p-4 sm:p-6 backdrop-blur-xl shadow-xl shadow-black/40">
-            
-            <!-- Mode Switcher Tabs -->
-            <div class="flex items-center p-1 bg-[#08120e] rounded-2xl border border-emerald-900/60 mb-4">
-              <button id="tab-btn-camera" onclick="setInputMode('camera')" class="flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-all bg-emerald-600 text-white shadow-md">
-                <i data-lucide="camera" class="w-4 h-4"></i> Live Camera
-              </button>
-              <button id="tab-btn-upload" onclick="setInputMode('upload')" class="flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-all text-slate-300 hover:text-white">
-                <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload Image
-              </button>
-              <button id="tab-btn-samples" onclick="setInputMode('samples')" class="flex-1 py-2 sm:py-2.5 px-2 rounded-xl font-medium text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition-all text-slate-300 hover:text-white">
-                <i data-lucide="sparkles" class="w-4 h-4"></i> Presets (<span class="text-emerald-400">6</span>)
-              </button>
-            </div>
-
-            <!-- CONTAINER A: LIVE CAMERA STREAM WITH MOBILE SHUTTER -->
-            <div id="container-camera" class="space-y-3">
-              <div class="relative w-full aspect-[3/4] sm:aspect-[4/3] max-h-[460px] rounded-2xl overflow-hidden bg-black border border-emerald-700/50 shadow-inner group">
-                
-                <!-- Video Element -->
-                <video id="camera-feed" autoplay playsinline muted class="w-full h-full object-cover"></video>
-                <canvas id="camera-canvas" class="hidden"></canvas>
-                
-                <!-- Viewfinder Guide Overlay -->
-                <div id="camera-overlay" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-4 sm:p-6">
-                  <!-- Top Controls Bar inside Camera -->
-                  <div class="flex justify-between items-center pointer-events-auto">
-                    <button onclick="toggleTorch()" id="btn-torch" class="p-2 rounded-xl bg-black/60 backdrop-blur-md border border-emerald-500/30 text-emerald-300 hover:text-white transition" title="Torch / Flash">
-                      <i id="torch-icon" data-lucide="zap" class="w-4 h-4"></i>
-                    </button>
-                    
-                    <div class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-emerald-500/30 text-[10px] sm:text-xs text-emerald-300 font-mono flex items-center gap-1.5">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Live Sensor
-                    </div>
-
-                    <button onclick="switchCameraFacing()" class="p-2 rounded-xl bg-black/60 backdrop-blur-md border border-emerald-500/30 text-emerald-300 hover:text-white transition" title="Flip Camera">
-                      <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                    </button>
-                  </div>
-
-                  <!-- Focus Reticle Box -->
-                  <div class="self-center flex flex-col items-center justify-center text-center">
-                    <div class="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl border-2 border-dashed border-emerald-400/50 flex items-center justify-center relative">
-                      <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-emerald-400"></div>
-                      <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-emerald-400"></div>
-                      <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-emerald-400"></div>
-                      <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-emerald-400"></div>
-                      <i data-lucide="focus" class="w-10 h-10 text-emerald-400/70"></i>
-                    </div>
-                    <span class="mt-2 text-[11px] text-emerald-200 font-medium bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm">Center damaged leaf in frame</span>
-                  </div>
-
-                  <!-- Bottom Space -->
-                  <div class="h-6"></div>
-                </div>
-
-                <!-- Camera Error Fallback -->
-                <div id="camera-fallback" class="hidden absolute inset-0 bg-[#09130f] p-6 flex flex-col items-center justify-center text-center space-y-3">
-                  <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
-                    <i data-lucide="camera-off" class="w-6 h-6"></i>
-                  </div>
-                  <h4 class="font-display font-bold text-white text-sm">Camera Not Accessible</h4>
-                  <p class="text-xs text-slate-300 max-w-xs">
-                    Please allow camera permissions or switch to file upload / sample preset.
-                  </p>
-                  <button onclick="initCamera()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold">
-                    Retry Camera
-                  </button>
-                </div>
-              </div>
-
-              <!-- Native Shutter Trigger Bar -->
-              <div class="flex items-center justify-center pt-2">
-                <button id="btn-shutter" onclick="captureFromCamera()" class="relative group p-1.5 rounded-full border-4 border-emerald-400/50 hover:border-emerald-300 transition-all flex items-center justify-center shadow-xl shadow-emerald-500/25">
-                  <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 group-hover:scale-95 group-active:scale-90 transition-transform flex items-center justify-center text-white shadow-inner">
-                    <i data-lucide="aperture" class="w-7 h-7"></i>
-                  </div>
-                </button>
-              </div>
-              <p class="text-center text-[10px] text-slate-400">Tap Shutter to Snap & Run Deep Analysis</p>
-            </div>
-
-            <!-- CONTAINER B: UPLOAD / DRAG & DROP -->
-            <div id="container-upload" class="hidden space-y-3">
-              <div id="dropzone" class="relative w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-emerald-700/50 hover:border-emerald-400 bg-[#091410]/70 hover:bg-[#0c1a14] transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer group">
-                <input type="file" id="file-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10">
-                
-                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-lg shadow-emerald-500/10">
-                  <i data-lucide="upload-cloud" class="w-7 h-7"></i>
-                </div>
-                <h4 class="font-display font-bold text-white text-sm sm:text-base group-hover:text-emerald-300 transition-colors">
-                  Choose or Drop Leaf Image
-                </h4>
-                <p class="text-[11px] text-slate-400 mt-1 max-w-xs">
-                  PNG, JPG, WEBP, or paste with <kbd class="px-1 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono text-[9px] border border-emerald-800">Ctrl + V</kbd>
-                </p>
-                <div class="mt-3 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-600/30 text-emerald-300 text-xs font-semibold border border-emerald-500/30 group-hover:bg-emerald-600 group-hover:text-white transition">
-                  <i data-lucide="folder-search" class="w-3.5 h-3.5"></i> Select File
-                </div>
-              </div>
-            </div>
-
-            <!-- CONTAINER C: SAMPLE PRESETS (Expanded with more crops) -->
-            <div id="container-samples" class="hidden space-y-3">
-              <p class="text-xs text-slate-300">Tap any scenario to test immediate diagnostic accuracy:</p>
-              
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                <!-- Tomato Early Blight -->
-                <button onclick="loadSample('tomato_blight')" class="text-left p-2 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 hover:border-emerald-500 transition-all flex flex-col gap-1.5">
-                  <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 relative">
-                    <img src="https://images.unsplash.com/photo-1592417817098-8f3d6910985c?auto=format&fit=crop&w=600&q=80" alt="Tomato Blight" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-rose-500 text-white">Blight</span>
-                  </div>
-                  <div>
-                    <h5 class="text-[11px] font-semibold text-white">Tomato Early Blight</h5>
-                    <p class="text-[9px] text-slate-400">Alternaria solani</p>
-                  </div>
-                </button>
-
-                <!-- Rose Black Spot -->
-                <button onclick="loadSample('rose_blackspot')" class="text-left p-2 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 hover:border-emerald-500 transition-all flex flex-col gap-1.5">
-                  <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 relative">
-                    <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80" alt="Rose Black Spot" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-amber-500 text-white">Fungus</span>
-                  </div>
-                  <div>
-                    <h5 class="text-[11px] font-semibold text-white">Rose Black Spot</h5>
-                    <p class="text-[9px] text-slate-400">Diplocarpon rosae</p>
-                  </div>
-                </button>
-
-                <!-- Citrus Canker -->
-                <button onclick="loadSample('citrus_canker')" class="text-left p-2 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 hover:border-emerald-500 transition-all flex flex-col gap-1.5">
-                  <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 relative">
-                    <img src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?auto=format&fit=crop&w=600&q=80" alt="Citrus Canker" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-orange-500 text-white">Bacterial</span>
-                  </div>
-                  <div>
-                    <h5 class="text-[11px] font-semibold text-white">Citrus Canker</h5>
-                    <p class="text-[9px] text-slate-400">Xanthomonas</p>
-                  </div>
-                </button>
-
-                <!-- Potato Late Blight -->
-                <button onclick="loadSample('potato_mildew')" class="text-left p-2 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 hover:border-emerald-500 transition-all flex flex-col gap-1.5">
-                  <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 relative">
-                    <img src="https://images.unsplash.com/photo-1598880940371-c756e015fea1?auto=format&fit=crop&w=600&q=80" alt="Potato Late Blight" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-rose-600 text-white">Severe</span>
-                  </div>
-                  <div>
-                    <h5 class="text-[11px] font-semibold text-white">Potato Late Blight</h5>
-                    <p class="text-[9px] text-slate-400">Phytophthora</p>
-                  </div>
-                </button>
-
-                <!-- Corn Common Rust -->
-                <button onclick="loadSample('corn_rust')" class="text-left p-2 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 hover:border-emerald-500 transition-all flex flex-col gap-1.5">
-                  <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 relative">
-                    <img src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80" alt="Corn Rust" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-amber-600 text-white">Rust</span>
-                  </div>
-                  <div>
-                    <h5 class="text-[11px] font-semibold text-white">Corn Common Rust</h5>
-                    <p class="text-[9px] text-slate-400">Puccinia sorghi</p>
-                  </div>
-                </button>
-
-                <!-- Healthy Bell Pepper -->
-                <button onclick="loadSample('healthy_pepper')" class="text-left p-2 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 hover:border-emerald-500 transition-all flex flex-col gap-1.5">
-                  <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 relative">
-                    <img src="https://images.unsplash.com/photo-1526397751294-331021109fbd?auto=format&fit=crop&w=600&q=80" alt="Healthy Foliage" class="w-full h-full object-cover">
-                    <span class="absolute top-1 left-1 text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full bg-emerald-500 text-white">Clean</span>
-                  </div>
-                  <div>
-                    <h5 class="text-[11px] font-semibold text-white">Healthy Bell Pepper</h5>
-                    <p class="text-[9px] text-emerald-400">100% Disease Free</p>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <!-- ACTIVE IMAGE PREVIEW & REAL CANVAS GRAD-CAM HEATMAP -->
-            <div id="preview-section" class="hidden mt-4 pt-4 border-t border-emerald-900/50 space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                  <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i> Active Leaf Scan Target
-                </span>
-                <button onclick="clearActiveImage()" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Clear
-                </button>
-              </div>
-
-              <!-- Canvas / Image Composite Container -->
-              <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-emerald-600/40 shadow-xl">
-                <!-- Source Leaf Image -->
-                <img id="active-image-preview" crossorigin="anonymous" src="" alt="Active Leaf Preview" class="w-full h-full object-cover">
-                
-                <!-- Real Deep Learning Canvas Heatmap Overlay -->
-                <canvas id="gradcam-canvas" class="hidden absolute inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-90 transition-opacity"></canvas>
-
-                <!-- Holographic Scanning Laser Animation -->
-                <div id="scanning-laser" class="hidden absolute inset-0 pointer-events-none">
-                  <div class="absolute w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_20px_#34d399] animate-scan-laser"></div>
-                  <div class="absolute inset-0 bg-emerald-500/10 backdrop-contrast-125"></div>
-                  <div class="absolute bottom-3 left-3 right-3 bg-black/85 backdrop-blur-md rounded-xl p-3 border border-emerald-500/40 flex items-center gap-3">
-                    <div class="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
-                    <div class="flex-1">
-                      <p id="scanning-status-text" class="text-xs font-semibold text-emerald-300">Extracting Pixel Saturation & Lesion Boundaries...</p>
-                      <div class="w-full bg-emerald-950 rounded-full h-1.5 mt-1 overflow-hidden">
-                        <div id="scan-progress-bar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[25%] transition-all duration-300"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Main Trigger Diagnose Button -->
-              <button id="btn-trigger-diagnose" onclick="runDiagnosis()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-sm tracking-wide shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all">
-                <i data-lucide="sparkles" class="w-5 h-5"></i>
-                <span>Diagnose Plant Disease & Generate Cure</span>
-              </button>
-            </div>
-
+      <!-- Big Card 2: Gallery Upload -->
+      <label class="cursor-pointer group text-left p-6 rounded-3xl bg-gradient-to-b from-[#10231b] to-[#0c1a14] border-2 border-emerald-700/40 hover:border-emerald-400 p-6 flex flex-col justify-between transition-all transform hover:-translate-y-1 shadow-lg shadow-black/40">
+        <input type="file" id="file-input" accept="image/*" class="hidden">
+        <div class="flex items-center justify-between w-full mb-4">
+          <div class="w-14 h-14 rounded-2xl bg-teal-500/20 border border-teal-500/30 text-teal-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i data-lucide="image" class="w-7 h-7"></i>
           </div>
-
-          <!-- SPECIAL FEATURE: REAL-TIME PIXEL & SPECTRAL PATHOLOGY METRICS -->
-          <div id="spectral-metrics-card" class="hidden rounded-3xl bg-[#0e1d17]/80 border border-emerald-800/40 p-4 sm:p-5 backdrop-blur-md space-y-3">
-            <div class="flex items-center justify-between">
-              <h4 class="text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider">
-                <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Cellular Spectral Analysis (Real Pixels)
-              </h4>
-              <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800">Canvas CV</span>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2 pt-1 text-center">
-              <div class="p-2.5 rounded-xl bg-black/40 border border-emerald-900/60">
-                <span class="text-[10px] text-slate-400 block">Chlorophyll Index</span>
-                <span id="spectral-chlorophyll" class="text-sm font-extrabold text-emerald-400">76.4%</span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-black/40 border border-emerald-900/60">
-                <span class="text-[10px] text-slate-400 block">Necrotic Lesions</span>
-                <span id="spectral-necrosis" class="text-sm font-extrabold text-amber-400">18.2%</span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-black/40 border border-emerald-900/60">
-                <span class="text-[10px] text-slate-400 block">Tissue Viability</span>
-                <span id="spectral-viability" class="text-sm font-extrabold text-teal-400">81.8%</span>
-              </div>
-            </div>
-
-            <!-- Toggle Grad-CAM Heatmap overlay -->
-            <button onclick="toggleGradCamHeatmap()" id="btn-toggle-gradcam" class="w-full py-2 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-700/50 text-emerald-300 text-xs font-semibold flex items-center justify-center gap-2 transition">
-              <i data-lucide="flame" class="w-4 h-4 text-rose-400"></i>
-              <span id="gradcam-btn-text">Show Real Grad-CAM Lesion Heatmap</span>
-            </button>
-          </div>
-
+          <span class="text-[11px] font-bold uppercase tracking-wider bg-teal-600 text-white px-2.5 py-1 rounded-full shadow">From Phone</span>
         </div>
-
-        <!-- RIGHT COLUMN: Clinical Results & 4-Pillar Prescription -->
-        <div class="lg:col-span-6 space-y-6">
-
-          <!-- EMPTY STATE (Before scan) -->
-          <div id="panel-empty-state" class="bg-[#0e1d17]/60 rounded-3xl border border-emerald-900/40 p-8 sm:p-12 text-center backdrop-blur-xl flex flex-col items-center justify-center space-y-4 min-h-[460px]">
-            <div class="w-20 h-20 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center animate-float">
-              <i data-lucide="stethoscope" class="w-10 h-10"></i>
-            </div>
-            <h3 class="font-display font-bold text-xl text-white">Botanical Clinic Awaiting Leaf</h3>
-            <p class="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed">
-              Capture foliage using the mobile camera or upload an image on the left. The neural pathology engine will inspect cellular health and issue instant treatments.
-            </p>
-          </div>
-
-          <!-- DIAGNOSIS RESULT CARD -->
-          <div id="panel-result" class="hidden space-y-6">
-            
-            <!-- Hero Diagnosis Banner -->
-            <div class="bg-[#0e1d17]/90 rounded-3xl border border-emerald-700/50 p-5 sm:p-6 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-              <div class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                    <span id="res-badge-severity" class="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wide uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                      High Severity
-                    </span>
-                    <span id="res-plant-name" class="text-xs font-semibold text-emerald-300/80">
-                      Solanum lycopersicum (Tomato)
-                    </span>
-                  </div>
-                  <h2 id="res-disease-name" class="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight">
-                    Early Blight Disease
-                  </h2>
-                  <p id="res-pathogen-scientific" class="text-xs text-emerald-400/90 font-mono mt-0.5">
-                    Pathogen: Alternaria solani
-                  </p>
-                </div>
-
-                <!-- Confidence Dial -->
-                <div class="flex flex-col items-center justify-center bg-black/40 border border-emerald-800/60 p-2.5 rounded-2xl shrink-0">
-                  <div class="relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
-                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                      <path class="text-emerald-950 stroke-current" stroke-width="3.5" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                      <path id="res-confidence-circle" class="text-emerald-400 stroke-current" stroke-dasharray="94, 100" stroke-width="3.5" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                    </svg>
-                    <span id="res-confidence-text" class="absolute text-xs font-bold text-white">94%</span>
-                  </div>
-                  <span class="text-[8px] uppercase tracking-wider text-slate-400 font-semibold mt-1">Accuracy</span>
-                </div>
-              </div>
-
-              <!-- Description -->
-              <p id="res-description" class="text-xs sm:text-sm text-slate-300 mt-4 leading-relaxed pt-3 border-t border-emerald-900/60">
-                <!-- Injected via JS -->
-              </p>
-
-              <!-- Utility Buttons Bar -->
-              <div class="mt-4 pt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <div class="flex items-center gap-2">
-                  <button onclick="speakPrescription()" id="btn-speak-report" class="px-3 py-1.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-800/60 text-emerald-300 text-[11px] font-medium flex items-center gap-1.5 transition">
-                    <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
-                    <span>Read Aloud</span>
-                  </button>
-                  <button onclick="openDosageForCurrent()" class="px-3 py-1.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-800/60 text-teal-300 text-[11px] font-medium flex items-center gap-1.5 transition">
-                    <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
-                    <span>Calculate Dosage</span>
-                  </button>
-                </div>
-
-                <button onclick="exportPrescriptionPDF()" class="px-3 py-1.5 rounded-xl bg-[#132c21] hover:bg-[#1a3a2c] text-white text-[11px] font-medium flex items-center gap-1.5 transition">
-                  <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-                  <span>Print Prescription</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- SPECIAL FEATURE: 14-DAY RECOVERY PROGNOSIS SIMULATOR -->
-            <div class="rounded-3xl bg-[#0e1d17]/85 border border-emerald-800/40 p-4 sm:p-5 backdrop-blur-xl space-y-3">
-              <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold text-white flex items-center gap-2 uppercase tracking-wider">
-                  <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i> 14-Day Plant Recovery Timeline
-                </h4>
-                <span id="prognosis-day-label" class="text-xs font-mono font-bold text-emerald-300">Day 1</span>
-              </div>
-
-              <!-- Interactive Timeline Slider -->
-              <input type="range" id="timeline-slider" min="1" max="14" value="1" oninput="updatePrognosisDay(this.value)" class="w-full accent-emerald-500 cursor-pointer">
-
-              <div class="p-3 rounded-2xl bg-black/40 border border-emerald-900/60 text-xs">
-                <h5 id="prognosis-title" class="font-bold text-emerald-300 mb-1">Day 1: Sanitation & Disinfection Phase</h5>
-                <p id="prognosis-desc" class="text-slate-300 text-[11px] leading-relaxed">
-                  Immediately prune heavily infected leaves (bottom 12 inches). Apply 70% alcohol to clean tools.
-                </p>
-              </div>
-            </div>
-
-            <!-- 4-Pillar Clinical Prescription Hub -->
-            <div class="space-y-4">
-              <h3 class="text-xs sm:text-sm font-display font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
-                <i data-lucide="stethoscope" class="w-4 h-4"></i> Recommended Clinical Treatment Plan
-              </h3>
-
-              <!-- Pillar 1: Organic & Eco-Friendly Cures -->
-              <div class="rounded-2xl bg-[#0e1d17]/80 border border-emerald-800/40 p-4 backdrop-blur-md">
-                <div class="flex items-center gap-2.5 text-emerald-300 font-semibold text-xs sm:text-sm mb-2">
-                  <div class="w-7 h-7 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                    <i data-lucide="sprout" class="w-4 h-4"></i>
-                  </div>
-                  <span>Organic & Natural Remedies</span>
-                </div>
-                <ul id="res-organic-cures" class="text-xs text-slate-300 space-y-1.5 pl-8 list-disc">
-                  <!-- Injected via JS -->
-                </ul>
-              </div>
-
-              <!-- Pillar 2: Chemical & Medical Fungicides -->
-              <div class="rounded-2xl bg-[#0e1d17]/80 border border-emerald-800/40 p-4 backdrop-blur-md">
-                <div class="flex items-center gap-2.5 text-teal-300 font-semibold text-xs sm:text-sm mb-2">
-                  <div class="w-7 h-7 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center">
-                    <i data-lucide="flask-conical" class="w-4 h-4"></i>
-                  </div>
-                  <span>Chemical / Fungicidal Intervention</span>
-                </div>
-                <ul id="res-chemical-cures" class="text-xs text-slate-300 space-y-1.5 pl-8 list-disc">
-                  <!-- Injected via JS -->
-                </ul>
-              </div>
-
-              <!-- Pillar 3: Environmental & Prevention Protocol -->
-              <div class="rounded-2xl bg-[#0e1d17]/80 border border-emerald-800/40 p-4 backdrop-blur-md">
-                <div class="flex items-center gap-2.5 text-blue-300 font-semibold text-xs sm:text-sm mb-2">
-                  <div class="w-7 h-7 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i>
-                  </div>
-                  <span>Cultural Prevention & Care</span>
-                </div>
-                <ul id="res-prevention-tips" class="text-xs text-slate-300 space-y-1.5 pl-8 list-disc">
-                  <!-- Injected via JS -->
-                </ul>
-              </div>
-
-              <!-- Pillar 4: Quarantine Alert -->
-              <div id="res-quarantine-box" class="rounded-2xl bg-rose-950/30 border border-rose-800/40 p-4 flex items-start gap-3">
-                <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-400 shrink-0 mt-0.5"></i>
-                <div>
-                  <h5 class="text-xs font-bold text-rose-300 uppercase tracking-wide">Quarantine & Containment Advice</h5>
-                  <p id="res-quarantine-text" class="text-xs text-rose-200/80 mt-1 leading-relaxed">
-                    <!-- Injected via JS -->
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Integrated Botanical Assistant Q&A Chat -->
-            <div class="rounded-3xl bg-[#0e1d17]/90 border border-emerald-800/40 p-4 sm:p-5 backdrop-blur-xl space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white">
-                    <i data-lucide="bot" class="w-4 h-4"></i>
-                  </div>
-                  <div>
-                    <h4 class="text-xs font-bold text-white">Plant Doctor Chatbot</h4>
-                    <p class="text-[10px] text-slate-400">Ask any specific cure, watering or fruit question</p>
-                  </div>
-                </div>
-                <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded-full border border-emerald-800">Online</span>
-              </div>
-
-              <!-- Chat Flow -->
-              <div id="chat-messages" class="h-44 overflow-y-auto space-y-2 p-2.5 rounded-2xl bg-[#08120d] border border-emerald-900/50 text-xs">
-                <!-- Messages -->
-              </div>
-
-              <!-- Input Form -->
-              <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex gap-2">
-                <input type="text" id="chat-input" placeholder="Ask a question about treatment, watering..." class="flex-1 bg-[#091510] border border-emerald-800/50 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400">
-                <button type="submit" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold flex items-center gap-1 transition">
-                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                </button>
-              </form>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ============================================== -->
-    <!-- VIEW 2: TREATMENT & DOSAGE CALCULATOR          -->
-    <!-- ============================================== -->
-    <section id="view-calculator" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-emerald-950/80 via-[#0d1e17]/90 to-teal-950/70 border border-emerald-700/40 rounded-3xl p-6 backdrop-blur-xl">
-        <h2 class="text-2xl font-display font-extrabold text-white">Interactive Botanical Dosage Calculator</h2>
-        <p class="text-xs sm:text-sm text-slate-300 mt-1">
-          Calculate exact liquid milliliters of neem oil, grams of copper fungicide, and irrigation volume tailored to your pot size or garden plot.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Input Parameters -->
-        <div class="bg-[#0e1d17]/85 rounded-3xl border border-emerald-800/40 p-5 space-y-4">
-          <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i> Container / Garden Setup
+        <div>
+          <h3 id="lbl-card-upload-title" class="text-lg font-display font-extrabold text-white mb-1">
+            Choose Photo from Phone
           </h3>
-
-          <div>
-            <label class="block text-xs text-slate-300 font-semibold mb-1">Target Application Scale</label>
-            <div class="grid grid-cols-2 gap-2">
-              <button type="button" id="calc-mode-pot" onclick="setCalcScale('pot')" class="p-2.5 rounded-xl border border-emerald-600 bg-emerald-600/30 text-emerald-300 text-xs font-bold text-center">
-                🪴 Potted Houseplants
-              </button>
-              <button type="button" id="calc-mode-garden" onclick="setCalcScale('garden')" class="p-2.5 rounded-xl border border-emerald-900 bg-black/40 text-slate-400 text-xs font-bold text-center">
-                🌾 Outdoor Garden Bed
-              </button>
-            </div>
-          </div>
-
-          <div id="calc-pot-inputs">
-            <label class="block text-xs text-slate-300 font-semibold mb-1">Pot Size (Liters of Soil)</label>
-            <input type="number" id="calc-pot-volume" value="10" min="1" max="200" oninput="calculateDosage()" class="w-full bg-[#08120d] border border-emerald-800 rounded-xl px-3 py-2 text-xs text-white">
-            <span class="text-[10px] text-slate-400 mt-1 block">Typical: 5L (Small pot), 15L (Medium), 40L (Large planter)</span>
-          </div>
-
-          <div id="calc-garden-inputs" class="hidden">
-            <label class="block text-xs text-slate-300 font-semibold mb-1">Garden Bed Area (Square Meters)</label>
-            <input type="number" id="calc-garden-area" value="5" min="1" max="1000" oninput="calculateDosage()" class="w-full bg-[#08120d] border border-emerald-800 rounded-xl px-3 py-2 text-xs text-white">
-            <span class="text-[10px] text-slate-400 mt-1 block">1 sq meter ≈ 10 sq feet</span>
-          </div>
-
-          <div>
-            <label class="block text-xs text-slate-300 font-semibold mb-1">Severity of Infection</label>
-            <select id="calc-severity" onchange="calculateDosage()" class="w-full bg-[#08120d] border border-emerald-800 rounded-xl px-3 py-2 text-xs text-white">
-              <option value="mild">Mild (Early Spotting / Preventative)</option>
-              <option value="moderate" selected>Moderate (20-40% Leaf Coverage)</option>
-              <option value="severe">Severe (Heavy Blight / Spore Outbreak)</option>
-            </select>
-          </div>
+          <p id="lbl-card-upload-sub" class="text-xs text-slate-300">
+            Pick any leaf photo already in your gallery.
+          </p>
         </div>
+      </label>
 
-        <!-- Computed Prescription Dosage Results -->
-        <div class="bg-[#0e1d17]/85 rounded-3xl border border-emerald-800/40 p-5 space-y-4 flex flex-col justify-between">
-          <div class="space-y-3">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <i data-lucide="flask-conical" class="w-4 h-4 text-teal-400"></i> Formulated Application Prescription
-            </h3>
-
-            <!-- Neem Recipe Card -->
-            <div class="p-3.5 rounded-2xl bg-black/40 border border-emerald-900/60 space-y-1">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-300">Organic Neem Oil Spray</span>
-                <span id="calc-res-neem" class="text-xs font-mono font-bold text-white">15 ml</span>
-              </div>
-              <p id="calc-res-neem-sub" class="text-[11px] text-slate-400">Mix in 3.0 Liters warm water + 3 drops castile soap.</p>
-            </div>
-
-            <!-- Copper Fungicide Card -->
-            <div class="p-3.5 rounded-2xl bg-black/40 border border-emerald-900/60 space-y-1">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-teal-300">Copper Fungicide Powder</span>
-                <span id="calc-res-copper" class="text-xs font-mono font-bold text-white">6.0 grams</span>
-              </div>
-              <p id="calc-res-copper-sub" class="text-[11px] text-slate-400">Dissolve in 2.0 Liters water. Spray underside of leaves.</p>
-            </div>
-
-            <!-- Watering Schedule Card -->
-            <div class="p-3.5 rounded-2xl bg-black/40 border border-emerald-900/60 space-y-1">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-blue-300">Irrigation Target</span>
-                <span id="calc-res-water" class="text-xs font-mono font-bold text-white">1.5 Liters</span>
-              </div>
-              <p id="calc-res-water-sub" class="text-[11px] text-slate-400">Water directly into soil at base twice a week. Keep foliage dry.</p>
-            </div>
-          </div>
-
-          <div class="p-3 rounded-2xl bg-emerald-950/40 border border-emerald-800/40 text-[11px] text-emerald-300 flex items-center gap-2">
-            <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-amber-400"></i>
-            <span>Always spray early morning or at dusk to protect pollinating honeybees!</span>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
 
     <!-- ============================================== -->
-    <!-- VIEW 3: 30+ DISEASE ENCYCLOPEDIA               -->
+    <!-- CAMERA VIEWFINDER MODAL / CONTAINER            -->
     <!-- ============================================== -->
-    <section id="view-library" class="hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-display font-extrabold text-white">Botanical Disease Encyclopedia</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Search symptoms, biological pathogens, and cures across 30+ major crops and ornamentals.</p>
-        </div>
-        
-        <!-- Search Box -->
-        <div class="relative w-full sm:w-72">
-          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
-          <input type="text" id="library-search" oninput="filterLibrary()" placeholder="Search tomato, rust, fungus..." class="w-full bg-[#0d1d17] border border-emerald-800/50 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400">
-        </div>
-      </div>
-
-      <!-- Disease Cards Grid -->
-      <div id="library-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Rendered by app.js -->
-      </div>
-    </section>
-
-    <!-- ============================================== -->
-    <!-- VIEW 4: GARDEN JOURNAL / HISTORY               -->
-    <!-- ============================================== -->
-    <section id="view-history" class="hidden space-y-6">
+    <div id="container-camera" class="hidden rounded-3xl bg-[#0c1a14] border-2 border-emerald-600/60 p-4 space-y-4 shadow-2xl">
       <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-2xl font-display font-extrabold text-white">Garden Diagnostic Journal</h2>
-          <p class="text-xs sm:text-sm text-slate-400">Track and monitor your plants' diagnosis and recovery history over time.</p>
-        </div>
-        <button onclick="clearAllHistory()" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/40 border border-rose-900/50">
-          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Clear Journal
+        <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+          <i data-lucide="camera" class="w-4 h-4"></i>
+          <span id="lbl-cam-guide">Point camera at the sick leaf</span>
+        </span>
+        <button onclick="closeCameraMode()" class="px-3 py-1 rounded-xl bg-black/40 hover:bg-black/60 text-slate-300 text-xs font-bold border border-emerald-900">
+          ✕ <span id="lbl-cam-cancel">Cancel</span>
         </button>
       </div>
 
-      <div id="history-container" class="space-y-3">
-        <!-- Rendered by app.js -->
+      <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black border border-emerald-700/50">
+        <video id="camera-feed" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <canvas id="camera-canvas" class="hidden"></canvas>
+        
+        <!-- Viewfinder Ring -->
+        <div class="absolute inset-0 pointer-events-none flex items-center justify-center p-6">
+          <div class="w-44 h-44 sm:w-56 sm:h-56 rounded-full border-4 border-dashed border-emerald-400/70 flex items-center justify-center">
+            <span class="text-[11px] font-bold bg-black/60 text-emerald-200 px-3 py-1 rounded-full">Keep leaf inside circle</span>
+          </div>
+        </div>
       </div>
-    </section>
+
+      <!-- Controls: Flip Camera & Big Snap Button -->
+      <div class="flex items-center justify-between gap-3 pt-1">
+        <button onclick="switchCameraFacing()" class="px-4 py-3 rounded-2xl bg-[#14281f] hover:bg-[#1a3529] border border-emerald-700/40 text-slate-200 text-xs font-bold flex items-center gap-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          <span id="lbl-flip-cam">Flip Front/Back</span>
+        </button>
+
+        <button onclick="captureFromCamera()" class="flex-1 py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2 transform active:scale-95 transition">
+          <i data-lucide="camera" class="w-5 h-5"></i>
+          <span id="lbl-snap-btn">Click Photo & Check Now</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- PRESET TEST TILES (1-CLICK TESTING WITH SVGS)  -->
+    <!-- ============================================== -->
+    <div id="section-samples" class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 id="lbl-sample-title" class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Or tap a sample leaf to test:
+        </h3>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        
+        <!-- Preset 1: Tomato -->
+        <button onclick="loadSample('tomato_blight')" class="p-2.5 rounded-2xl bg-[#0d1c15] hover:bg-[#132920] border border-emerald-900/60 hover:border-emerald-500 text-left transition flex items-center gap-2.5 group">
+          <div id="thumb-sample-tomato" class="w-11 h-11 rounded-xl shrink-0 border border-emerald-800 bg-[#06120b] overflow-hidden p-1 flex items-center justify-center group-hover:border-emerald-500">
+            <svg viewBox="0 0 200 200" class="w-full h-full block" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 20 C60 50 30 110 50 160 C70 190 100 180 100 180 C100 180 130 190 150 160 C170 110 140 50 100 20 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="4"/>
+              <path d="M100 20 L100 180 M100 60 Q70 80 50 85 M100 100 Q70 120 55 130 M100 70 Q130 90 150 95 M100 110 Q130 130 145 140" stroke="#1b5e20" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="75" cy="115" r="22" fill="#fbc02d" fill-opacity="0.6"/>
+              <circle cx="75" cy="115" r="16" fill="#5d4037"/>
+              <circle cx="75" cy="115" r="10" fill="#3e2723"/>
+              <circle cx="75" cy="115" r="4" fill="#212121"/>
+              <circle cx="125" cy="85" r="18" fill="#fbc02d" fill-opacity="0.6"/>
+              <circle cx="125" cy="85" r="13" fill="#5d4037"/>
+              <circle cx="125" cy="85" r="8" fill="#3e2723"/>
+              <circle cx="95" cy="150" r="15" fill="#fbc02d" fill-opacity="0.5"/>
+              <circle cx="95" cy="150" r="10" fill="#4e342e"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white">🍅 Tomato</h4>
+            <span class="text-[10px] text-rose-400 font-semibold">Blight Fungus</span>
+          </div>
+        </button>
+
+        <!-- Preset 2: Rose -->
+        <button onclick="loadSample('rose_blackspot')" class="p-2.5 rounded-2xl bg-[#0d1c15] hover:bg-[#132920] border border-emerald-900/60 hover:border-emerald-500 text-left transition flex items-center gap-2.5 group">
+          <div id="thumb-sample-rose" class="w-11 h-11 rounded-xl shrink-0 border border-emerald-800 bg-[#06120b] overflow-hidden p-1 flex items-center justify-center group-hover:border-emerald-500">
+            <svg viewBox="0 0 200 200" class="w-full h-full block" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 25 C55 45 40 105 55 155 C70 185 100 180 100 180 C100 180 130 185 145 155 C160 105 145 45 100 25 Z" fill="#388e3c" stroke="#1b5e20" stroke-width="4"/>
+              <path d="M100 25 L100 180 M100 65 L60 90 M100 110 L65 135 M100 75 L140 100 M100 120 L135 145" stroke="#1b5e20" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="80" cy="100" r="18" fill="#ffeb3b" fill-opacity="0.5"/>
+              <circle cx="80" cy="100" r="14" fill="#212121"/>
+              <circle cx="86" cy="95" r="6" fill="#111111"/>
+              <circle cx="74" cy="106" r="5" fill="#111111"/>
+              <circle cx="120" cy="125" r="16" fill="#ffeb3b" fill-opacity="0.5"/>
+              <circle cx="120" cy="125" r="12" fill="#212121"/>
+              <circle cx="105" cy="65" r="12" fill="#212121"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white">🌹 Rose</h4>
+            <span class="text-[10px] text-amber-400 font-semibold">Black Spots</span>
+          </div>
+        </button>
+
+        <!-- Preset 3: Lemon / Citrus -->
+        <button onclick="loadSample('citrus_canker')" class="p-2.5 rounded-2xl bg-[#0d1c15] hover:bg-[#132920] border border-emerald-900/60 hover:border-emerald-500 text-left transition flex items-center gap-2.5 group">
+          <div id="thumb-sample-citrus" class="w-11 h-11 rounded-xl shrink-0 border border-emerald-800 bg-[#06120b] overflow-hidden p-1 flex items-center justify-center group-hover:border-emerald-500">
+            <svg viewBox="0 0 200 200" class="w-full h-full block" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 20 C60 40 45 95 60 150 C75 180 100 185 100 185 C100 185 125 180 140 150 C155 95 140 40 100 20 Z" fill="#43a047" stroke="#2e7d32" stroke-width="4"/>
+              <path d="M100 20 L100 185 M100 60 Q70 75 60 85 M100 100 Q70 115 65 125 M100 70 Q130 85 140 95 M100 115 Q130 130 135 140" stroke="#2e7d32" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="75" cy="90" r="19" fill="#ffee58" fill-opacity="0.75"/>
+              <circle cx="75" cy="90" r="12" fill="#6d4c41"/>
+              <circle cx="75" cy="90" r="7" fill="#3e2723"/>
+              <circle cx="120" cy="115" r="22" fill="#ffee58" fill-opacity="0.75"/>
+              <circle cx="120" cy="115" r="14" fill="#6d4c41"/>
+              <circle cx="120" cy="115" r="8" fill="#3e2723"/>
+              <circle cx="95" cy="145" r="15" fill="#ffee58" fill-opacity="0.7"/>
+              <circle cx="95" cy="145" r="9" fill="#5d4037"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white">🍋 Lemon</h4>
+            <span class="text-[10px] text-orange-400 font-semibold">Canker Spots</span>
+          </div>
+        </button>
+
+        <!-- Preset 4: Healthy Leaf -->
+        <button onclick="loadSample('healthy_pepper')" class="p-2.5 rounded-2xl bg-[#0d1c15] hover:bg-[#132920] border border-emerald-900/60 hover:border-emerald-500 text-left transition flex items-center gap-2.5 group">
+          <div id="thumb-sample-pepper" class="w-11 h-11 rounded-xl shrink-0 border border-emerald-800 bg-[#06120b] overflow-hidden p-1 flex items-center justify-center group-hover:border-emerald-500">
+            <svg viewBox="0 0 200 200" class="w-full h-full block" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 20 C50 45 35 105 50 160 C65 190 100 185 100 185 C100 185 135 190 150 160 C165 105 150 45 100 20 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="4"/>
+              <path d="M100 25 C60 50 48 100 60 145 C65 110 75 60 100 25 Z" fill="#43a047" fill-opacity="0.4"/>
+              <path d="M100 20 L100 185 M100 55 Q70 70 55 80 M100 90 Q70 105 60 120 M100 125 Q70 140 68 150 M100 65 Q130 80 145 90 M100 100 Q130 115 140 130 M100 135 Q130 150 132 155" stroke="#81c784" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white">🫑 Pepper</h4>
+            <span class="text-[10px] text-emerald-400 font-semibold">100% Healthy</span>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SCANNING SPINNER (SIMPLE & CLEAN)              -->
+    <!-- ============================================== -->
+    <div id="section-loading" class="hidden rounded-3xl bg-[#0c1a14] border border-emerald-700/40 p-8 text-center space-y-3">
+      <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <h3 id="lbl-loading-title" class="font-display font-bold text-lg text-white">Checking Plant Leaf...</h3>
+      <p id="lbl-loading-sub" class="text-xs text-slate-300">Finding what is wrong and preparing the medicine guide.</p>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- DIAGNOSIS RESULT (CLEAR, OBVIOUS & ADVANCED)   -->
+    <!-- ============================================== -->
+    <div id="section-result" class="hidden space-y-5">
+      
+      <!-- HERO STATUS BANNER -->
+      <div id="hero-result-card" class="rounded-3xl bg-gradient-to-b from-[#132b20] to-[#0d1d16] border-2 border-emerald-600/60 p-5 sm:p-7 space-y-4 shadow-2xl relative overflow-hidden">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="res-badge-danger" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide bg-rose-500 text-white shadow">
+                ⚠️ Danger: Urgent Action Needed
+              </span>
+              <span id="res-plant-name" class="text-sm font-bold text-emerald-300">
+                🍅 Tomato Plant
+              </span>
+            </div>
+            <h2 id="res-disease-name" class="text-2xl sm:text-3xl font-display font-black text-white tracking-tight pt-1">
+              Leaf Blight (Fungus Attack)
+            </h2>
+          </div>
+
+          <!-- Preview Thumbnail (With bulletproof SVG fallback) -->
+          <div id="res-leaf-box" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-emerald-500/50 shrink-0 bg-[#06140b] shadow-md flex items-center justify-center p-1.5">
+            <img id="res-leaf-photo" src="" alt="Plant Leaf" class="w-full h-full object-cover hidden">
+            <div id="res-leaf-svg-container" class="w-full h-full flex items-center justify-center"></div>
+          </div>
+        </div>
+
+        <!-- ADVANCED FEATURE 1: PLANT RECOVERY & DAMAGE GAUGE -->
+        <div class="p-3.5 rounded-2xl bg-black/40 border border-emerald-900/60 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="text-emerald-400 flex items-center gap-1.5">
+              <i data-lucide="heart-pulse" class="w-4 h-4"></i>
+              <span id="lbl-recovery-rate">Leaf Recovery Chance: 85% (High)</span>
+            </span>
+            <span id="lbl-infection-rate" class="text-rose-400 font-semibold">Damage: 15%</span>
+          </div>
+          <div class="w-full bg-emerald-950 rounded-full h-2.5 overflow-hidden flex">
+            <div id="bar-recovery" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[85%] transition-all duration-500"></div>
+            <div id="bar-infection" class="bg-rose-500 h-full w-[15%] transition-all duration-500"></div>
+          </div>
+        </div>
+
+        <!-- ADVANCED AUDIO PLAYER BAR (NO DOUBLE ICONS, SPEED TOGGLE & SOUNDBARS) -->
+        <div class="flex flex-col sm:flex-row items-center gap-2 pt-1 w-full">
+          
+          <!-- Main Voice Audio Button -->
+          <button id="btn-speak-voice" onclick="toggleDoctorVoice()" class="flex-1 w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold text-sm sm:text-base tracking-wide shadow-xl shadow-emerald-500/30 flex items-center justify-center gap-3 transform active:scale-98 transition">
+            <i id="icon-voice-state" data-lucide="volume-2" class="w-6 h-6 stroke-[2.5] shrink-0"></i>
+            <span id="lbl-voice-btn">Click to Listen to Doctor's Advice</span>
+            
+            <!-- Animated Soundbars Wave (Visible while speaking) -->
+            <div id="voice-equalizer" class="hidden flex items-end gap-1 h-5 ml-1">
+              <span class="w-1 bg-white rounded-full animate-sound-bar-1 h-3"></span>
+              <span class="w-1 bg-white rounded-full animate-sound-bar-2 h-5"></span>
+              <span class="w-1 bg-white rounded-full animate-sound-bar-3 h-4"></span>
+              <span class="w-1 bg-white rounded-full animate-sound-bar-2 h-2"></span>
+            </div>
+          </button>
+
+          <!-- Voice Speed Controller -->
+          <button id="btn-voice-speed" onclick="toggleVoiceSpeed()" class="w-full sm:w-auto py-4 px-4 rounded-2xl bg-[#0f241a] hover:bg-[#163527] border border-emerald-700/50 text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition" title="Change Voice Speed">
+            <i data-lucide="gauge" class="w-4 h-4"></i>
+            <span id="lbl-voice-speed">Speed: Normal (1.0x)</span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- 3 SIMPLE STEP-BY-STEP ACTION CARDS             -->
+      <!-- ============================================== -->
+      <div class="space-y-3">
+        <h3 id="lbl-action-title" class="text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i> What You Must Do (Step by Step):
+        </h3>
+
+        <!-- Action Card 1: Cut & Throw -->
+        <div class="rounded-3xl bg-[#0f2119] border border-emerald-800/40 p-4 sm:p-5 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/30 text-xl font-bold">
+            ✂️
+          </div>
+          <div>
+            <h4 id="lbl-step1-title" class="text-sm sm:text-base font-extrabold text-white">
+              Step 1: Cut Off Sick Leaves
+            </h4>
+            <p id="lbl-step1-desc" class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+              Use clean scissors to cut off the yellow and spotted leaves at the bottom of the plant. <strong>Throw them in the trash.</strong> Do not leave them on the ground.
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Card 2: Spray Medicine (Neem Recipe) -->
+        <div class="rounded-3xl bg-[#0f2119] border border-emerald-800/40 p-4 sm:p-5 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30 text-xl font-bold">
+            🧴
+          </div>
+          <div>
+            <h4 id="lbl-step2-title" class="text-sm sm:text-base font-extrabold text-white">
+              Step 2: Spray Home Neem Medicine
+            </h4>
+            <p id="lbl-step2-desc" class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+              Mix <strong>1 spoon Neem Oil</strong> + <strong>1 Liter Water</strong> + <strong>2 drops soap</strong>. Shake well in a spray bottle. Spray on top and underneath all leaves in the evening at sunset.
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Card 3: Watering Rule -->
+        <div class="rounded-3xl bg-[#0f2119] border border-emerald-800/40 p-4 sm:p-5 flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/30 text-xl font-bold">
+            💧
+          </div>
+          <div>
+            <h4 id="lbl-step3-title" class="text-sm sm:text-base font-extrabold text-white">
+              Step 3: Water Soil, NOT Leaves
+            </h4>
+            <p id="lbl-step3-desc" class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+              Pour water directly into the soil near the roots. <strong>Never splash water on leaves</strong>, because wet leaves make fungus grow fast.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ADVANCED FEATURE 2: INTERACTIVE CHECKLIST      -->
+      <!-- ============================================== -->
+      <div class="rounded-3xl bg-[#0c1a14] border border-emerald-800/50 p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 id="lbl-checklist-title" class="text-xs font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+            <i data-lucide="check-square" class="w-4 h-4 text-emerald-400"></i> My Treatment Checklist (Tap as you complete)
+          </h4>
+          <span id="checklist-progress" class="text-[11px] font-bold text-emerald-400 bg-emerald-950 px-2.5 py-0.5 rounded-full border border-emerald-800">0 of 3 Done</span>
+        </div>
+        
+        <div class="space-y-2 text-xs sm:text-sm text-slate-200">
+          <label class="flex items-center gap-3 p-3 rounded-2xl bg-[#0e2119] border border-emerald-900/60 hover:border-emerald-600 cursor-pointer transition">
+            <input type="checkbox" id="chk-step1" onchange="updateChecklist()" class="w-5 h-5 rounded-lg accent-emerald-500 cursor-pointer">
+            <span id="lbl-chk-step1">Cut yellow & spotted leaves, threw in trash</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-2xl bg-[#0e2119] border border-emerald-900/60 hover:border-emerald-600 cursor-pointer transition">
+            <input type="checkbox" id="chk-step2" onchange="updateChecklist()" class="w-5 h-5 rounded-lg accent-emerald-500 cursor-pointer">
+            <span id="lbl-chk-step2">Sprayed Neem Oil medicine on leaves at 5 PM</span>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-2xl bg-[#0e2119] border border-emerald-900/60 hover:border-emerald-600 cursor-pointer transition">
+            <input type="checkbox" id="chk-step3" onchange="updateChecklist()" class="w-5 h-5 rounded-lg accent-emerald-500 cursor-pointer">
+            <span id="lbl-chk-step3">Watered soil only, kept leaves completely dry</span>
+          </label>
+        </div>
+        
+        <div id="checklist-completed-banner" class="hidden p-3 rounded-2xl bg-emerald-600/20 border border-emerald-500 text-emerald-300 text-xs font-bold text-center">
+          🎉 Excellent! You have completed all steps. Your plant will recover quickly!
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- SIMPLE DOSAGE PICKER (NO COMPLEX MATH)         -->
+      <!-- ============================================== -->
+      <div class="rounded-3xl bg-[#0c1a14] border border-emerald-800/50 p-5 space-y-3">
+        <h4 id="lbl-dose-title" class="text-xs font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+          <i data-lucide="calculator" class="w-4 h-4"></i> How Much Medicine Do You Need? Tap your plant size:
+        </h4>
+
+        <!-- 3 Big Buttons for Pot / Garden / Field -->
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="setSimpleScale('small')" id="scale-btn-small" class="p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-600/30 text-white text-xs font-bold text-center">
+            🪴 1–2 Pots<br><span class="text-[10px] text-emerald-300 font-normal">Houseplant</span>
+          </button>
+          <button onclick="setSimpleScale('medium')" id="scale-btn-medium" class="p-3 rounded-2xl border border-emerald-900 bg-black/40 text-slate-300 text-xs font-bold text-center">
+            🏡 Small Garden<br><span class="text-[10px] text-slate-400 font-normal">5–10 Plants</span>
+          </button>
+          <button onclick="setSimpleScale('large')" id="scale-btn-large" class="p-3 rounded-2xl border border-emerald-900 bg-black/40 text-slate-300 text-xs font-bold text-center">
+            🌾 Farm / Field<br><span class="text-[10px] text-slate-400 font-normal">Big Plot</span>
+          </button>
+        </div>
+
+        <!-- Dosage Result Box -->
+        <div class="p-4 rounded-2xl bg-black/50 border border-emerald-900/60 flex items-center justify-between text-xs sm:text-sm">
+          <div>
+            <span id="lbl-dose-mix-label" class="text-slate-400 block text-[11px]">How to mix:</span>
+            <span id="lbl-dose-result" class="font-extrabold text-white text-sm sm:text-base">
+              🥄 1 Spoon Neem Oil in 🧴 1 Liter Water
+            </span>
+          </div>
+          <span class="text-[11px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 px-3 py-1 rounded-full">
+            Spray Every 7 Days
+          </span>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ADVANCED FEATURE 3: ONE-CLICK WHATSAPP SHARE   -->
+      <!-- ============================================== -->
+      <button onclick="shareOnWhatsApp()" class="w-full py-3.5 px-4 rounded-2xl bg-[#112d1f] hover:bg-[#183e2b] border border-emerald-600/40 text-emerald-300 hover:text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition">
+        <i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i>
+        <span id="lbl-whatsapp-btn">Send Medicine Recipe on WhatsApp (For Fertilizer Shop / Family)</span>
+      </button>
+
+      <!-- ============================================== -->
+      <!-- COLLAPSIBLE: ADVANCED SCIENTIFIC DETAILS       -->
+      <!-- ============================================== -->
+      <div class="pt-1">
+        <button onclick="toggleAdvancedDetails()" class="w-full py-2.5 px-4 rounded-2xl bg-[#091510] hover:bg-[#0f221a] border border-emerald-900/60 text-emerald-400 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+          <i data-lucide="flask-conical" class="w-3.5 h-3.5"></i>
+          <span id="lbl-adv-toggle">Show Agricultural & Chemical Fungicides (For Experts) ▼</span>
+        </button>
+
+        <div id="adv-details-container" class="hidden mt-3 p-4 rounded-2xl bg-[#0a1611] border border-emerald-800/40 space-y-3 text-xs text-slate-300">
+          <div>
+            <strong class="text-white block">Biological Pathogen Name:</strong>
+            <span id="adv-pathogen" class="font-mono text-emerald-400">Alternaria solani (Early Blight)</span>
+          </div>
+          <div>
+            <strong class="text-white block">Chemical Fungicide Option:</strong>
+            <span id="adv-chemical">Mancozeb 75% WP (2.5 grams per liter) or Chlorothalonil. Observe 7-day harvest interval.</span>
+          </div>
+          <div>
+            <strong class="text-white block">Why this happens:</strong>
+            <span id="adv-cause">Warm humid weather (24–29°C) combined with wet leaves allows fungal spores to enter leaf stomata.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scan Another Leaf Button -->
+      <button onclick="resetToHome()" class="w-full py-3.5 rounded-2xl bg-[#14281f] hover:bg-[#1a3529] border border-emerald-700/50 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        <span id="lbl-scan-another">Check Another Leaf</span>
+      </button>
+
+    </div>
 
   </main>
 
-  <!-- ============================================== -->
-  <!-- MOBILE NATIVE FLOATING BOTTOM NAVIGATION BAR   -->
-  <!-- ============================================== -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#07130f]/95 backdrop-blur-2xl border-t border-emerald-800/50 safe-bottom">
-    <div class="grid grid-cols-4 h-16 items-center text-[10px]">
-      <button onclick="switchNav('scanner')" id="mob-nav-scanner" class="flex flex-col items-center justify-center gap-1 text-emerald-400 font-semibold py-1">
-        <i data-lucide="scan" class="w-5 h-5"></i>
-        <span>Scanner</span>
-      </button>
-      <button onclick="switchNav('calculator')" id="mob-nav-calculator" class="flex flex-col items-center justify-center gap-1 text-slate-400 py-1">
-        <i data-lucide="calculator" class="w-5 h-5"></i>
-        <span>Dosage</span>
-      </button>
-      <button onclick="switchNav('library')" id="mob-nav-library" class="flex flex-col items-center justify-center gap-1 text-slate-400 py-1">
-        <i data-lucide="book-open" class="w-5 h-5"></i>
-        <span>Library</span>
-      </button>
-      <button onclick="switchNav('history')" id="mob-nav-history" class="flex flex-col items-center justify-center gap-1 text-slate-400 py-1">
-        <i data-lucide="history" class="w-5 h-5"></i>
-        <span>Journal</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- ============================================== -->
-  <!-- MODAL: SETTINGS & GEMINI API KEY CONFIG        -->
-  <!-- ============================================== -->
-  <div id="settings-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-[#0e1d17] border border-emerald-700/60 rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative">
-      <div class="flex items-center justify-between border-b border-emerald-900/60 pb-3">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-            <i data-lucide="cpu" class="w-4 h-4"></i>
-          </div>
-          <h3 class="font-display font-bold text-white text-base">Diagnostic AI Engine Settings</h3>
-        </div>
-        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white p-1">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <div class="space-y-4 text-xs text-slate-300">
-        <div>
-          <label class="block font-semibold text-white mb-1">Active AI Model Mode</label>
-          <div class="grid grid-cols-2 gap-2 mt-1">
-            <label class="flex items-center gap-2 p-3 rounded-xl bg-black/40 border border-emerald-800/60 cursor-pointer">
-              <input type="radio" name="ai-mode" value="built-in" checked onchange="toggleAiMode(this.value)" class="text-emerald-500">
-              <div>
-                <strong class="text-white block">FloraDoc Neural Engine</strong>
-                <span class="text-[10px] text-emerald-400">Offline & Fast (Default)</span>
-              </div>
-            </label>
-            <label class="flex items-center gap-2 p-3 rounded-xl bg-black/40 border border-emerald-800/60 cursor-pointer">
-              <input type="radio" name="ai-mode" value="gemini" onchange="toggleAiMode(this.value)" class="text-emerald-500">
-              <div>
-                <strong class="text-white block">Google Gemini Vision</strong>
-                <span class="text-[10px] text-teal-400">Live Multimodal API</span>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div id="gemini-key-container" class="hidden space-y-2 pt-2 border-t border-emerald-900/50">
-          <label class="block font-semibold text-white">Gemini API Key</label>
-          <input type="password" id="gemini-api-key" placeholder="AIzaSy..." class="w-full bg-[#08120d] border border-emerald-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-400 font-mono">
-          <p class="text-[11px] text-slate-400">
-            Keys are saved in your local browser only.
-          </p>
-        </div>
-      </div>
-
-      <div class="pt-3 border-t border-emerald-900/60 flex justify-end gap-2">
-        <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-[#142920] hover:bg-[#1a382c] text-white text-xs font-semibold">
-          Save Settings
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="mt-16 border-t border-emerald-950/60 bg-[#050b08] py-8 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2 text-slate-400">
-        <i data-lucide="leaf" class="w-4 h-4 text-emerald-400"></i>
-        <span>FloraDoc AI — Smart Agricultural Health Platform</span>
-      </div>
-      <p class="text-slate-500 text-[11px]">Designed for mobile field inspection & desktop research.</p>
-    </div>
-  </footer>
-
-  <!-- Application Logic -->
   <script src="app.js"></script>
 </body>
 </html>

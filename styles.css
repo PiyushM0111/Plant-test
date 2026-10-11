@@ -1,85 +1,70 @@
 /* ========================================================
-   FloraDoc AI - Mobile Optimized Styles & Micro-Animations
+   Plant Doctor - Clean, Accessible & Professional Styling
    ======================================================== */
 
-/* Mobile Safe Areas */
-.safe-top {
-  padding-top: max(env(safe-area-inset-top, 0px), 0px);
-}
-.safe-bottom {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
+/* High-Contrast, Clean Typography */
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.01em;
 }
 
-/* Custom Smooth Scrollbar */
+/* Big Touchable Buttons for Mobile & Fingers */
+button, label, select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #060d0a;
+  background: #09120e;
 }
 ::-webkit-scrollbar-thumb {
-  background: #122d20;
+  background: #143525;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #10b981;
+  background: #22c55e;
 }
 
-/* Active Nav State */
-.active-tab {
-  background: #059669 !important;
+/* Sound Wave Equalizer Keyframes */
+@keyframes soundBar {
+  0%, 100% { height: 5px; opacity: 0.6; }
+  50% { height: 20px; opacity: 1; }
+}
+.animate-sound-bar-1 { animation: soundBar 0.6s ease-in-out infinite; }
+.animate-sound-bar-2 { animation: soundBar 0.45s ease-in-out infinite 0.15s; }
+.animate-sound-bar-3 { animation: soundBar 0.55s ease-in-out infinite 0.3s; }
+
+/* Clean Button Active State */
+.active-scale-btn {
+  border-color: #22c55e !important;
+  background-color: rgba(34, 197, 94, 0.25) !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
 }
 
-/* Touch Friendly Mobile Tap Targets */
-button, select, input, a {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-/* Grad-CAM Canvas Overlay */
-#gradcam-canvas {
-  transition: opacity 0.3s ease-in-out;
-}
-
-/* Shutter Trigger Animation */
-#btn-shutter:active div {
-  transform: scale(0.85);
-  box-shadow: 0 0 25px rgba(52, 211, 153, 0.6);
-}
-
-/* Print Styles for Clinical Prescription */
+/* Print Friendly Stylesheet */
 @media print {
   body {
     background: #ffffff !important;
-    color: #111827 !important;
+    color: #000000 !important;
   }
-  header, footer, nav, .safe-bottom,
-  #view-scanner > div:first-child, .lg\:col-span-6:first-child,
-  #chat-messages, #chat-form, #btn-toggle-gradcam, #btn-speak-report,
-  #spectral-metrics-card, #timeline-slider {
+  header, button, #section-input-cards, #section-samples {
     display: none !important;
   }
-  #view-scanner {
+  #section-result {
     display: block !important;
   }
-  .lg\:col-span-6:last-child {
-    width: 100% !important;
-  }
-  #panel-result {
-    display: block !important;
-  }
-  .bg-\[\#0e1d17\]\/90, .bg-\[\#0e1d17\]\/85, .bg-\[\#0e1d17\]\/80 {
+  .rounded-3xl, .rounded-2xl {
+    border: 1px solid #cccccc !important;
     background: #ffffff !important;
-    border: 1px solid #e5e7eb !important;
+    color: #000000 !important;
+  }
+  .text-white, .text-slate-300 {
     color: #111827 !important;
-  }
-  .text-white, .text-slate-300, .text-slate-400 {
-    color: #1f2937 !important;
-  }
-  .text-emerald-400, .text-emerald-300 {
-    color: #047857 !important;
   }
 }
